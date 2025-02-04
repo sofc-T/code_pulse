@@ -97,7 +97,7 @@ func (repo *documentrepo) SearchDocuments(email string, searchQuery string) ([]*
 	return documents, nil
 }
 
-func (repo *documentrepo) CreateDocument(author string, title string, body interface{}, readAccess []string, writeAccess []string) (string, error) {
+func (repo *documentrepo) CreateDocument(author string, title string, body interface{}, readAccess []string, writeAccess []string, language string) (string, error) {
 	log.Printf("Creating document for author: %s with title: %s", author, title)
 	newDocument := bson.D{
 		{Key: "author", Value: author},
@@ -105,6 +105,7 @@ func (repo *documentrepo) CreateDocument(author string, title string, body inter
 		{Key: "writeAccess", Value: writeAccess},
 		{Key: "title", Value: title},
 		{Key: "body", Value: body},
+		{Key: "language", Value: language},
 	}
 
 	document, err := repo.collection.InsertOne(context.Background(), newDocument)

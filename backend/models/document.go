@@ -11,6 +11,7 @@ type Document struct {
 	WriteAccess []string     `json:"writeAccess" bson:"writeAccess"`
 	Title       string       `json:"title"`
 	Data        DocumentData `json:"data" bson:"data"`
+	ProgrammingLanguage string `json:"programmingLanguage" bson:"programmingLanguage"`
 }
 
 type Message struct {
