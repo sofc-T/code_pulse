@@ -15,7 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/sofc-t/code_pulse/delivery/controller"
 	core "github.com/sofc-t/code_pulse/delivery/core"
-	"github.com/sofc-t/code_pulse/dto"
+	"github.com/sofc-t/code_pulse/models"
 	docservice "github.com/sofc-t/code_pulse/infrastructure/doc"
 	userservice "github.com/sofc-t/code_pulse/infrastructure/user"
 	
@@ -177,7 +177,7 @@ func main() {
 			// updating the database
 			document := documentController.UpdateCollaborators(ctx)
 			// updating the cache
-			access := new(dto.Access)
+			access := new(models.Access)
 			access.ID = document.ID
 			access.ReadAccess = document.ReadAccess
 			access.WriteAccess = document.WriteAccess

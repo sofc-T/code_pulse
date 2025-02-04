@@ -13,9 +13,9 @@ import (
 func AuthorizeJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := ""
-		receivedToken := c.Query("token")
-		if receivedToken != "" {
-			tokenString = receivedToken
+		receivemodelsken := c.Query("token")
+		if receivemodelsken != "" {
+			tokenString = receivemodelsken
 		} else {
 			const BEARER_SCHEMA = "Bearer "
 			authHeader := c.GetHeader("Authorization")

@@ -1,4 +1,4 @@
-package dto
+package models
 
 type Title struct {
 	ID    string `json:"id" bson:"_id,omitempty"`

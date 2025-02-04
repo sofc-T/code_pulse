@@ -1,4 +1,4 @@
-package dto
+package models
 
 type SignUp struct {
 	FullName string `form:"fullName"`

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/sofc-t/code_pulse/dto"
+	"github.com/sofc-t/code_pulse/models"
 	repo "github.com/sofc-t/code_pulse/infrastructure/doc"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson"
@@ -64,7 +64,7 @@ func (s *DocumentServiceSuite) prepareTestData() {
 }
 
 func (s *DocumentServiceSuite) TestGetAllDocuments() {
-	email := dto.Email{Email: "author@test.com"}
+	email := models.Email{Email: "author@test.com"}
 
 	// Call the method under test
 	documents, err := s.repo.GetAllDocuments(email)
@@ -107,13 +107,13 @@ func (s *DocumentServiceSuite) TestCreateDocument() {
 
 func (s *DocumentServiceSuite) TestUpdateDocument() {
 	// Prepare test data
-	documents, err := s.repo.GetAllDocuments(dto.Email{Email: "author@test.com"})
+	documents, err := s.repo.GetAllDocuments(models.Email{Email: "author@test.com"})
 	s.Require().NoError(err)
 	s.Require().Len(documents, 1)
 	documentID := documents[0].ID
 
 	// Prepare update data
-	incomingData := dto.DocumentData{
+	incomingData := models.DocumentData{
 		Ops: []map[string]interface{}{
 			{
 				"insert": map[string]interface{}{
@@ -134,7 +134,7 @@ func (s *DocumentServiceSuite) TestUpdateDocument() {
 
 func (s *DocumentServiceSuite) TestGetDocumentByID() {
 	// Prepare test data
-	documents, err := s.repo.GetAllDocuments(dto.Email{Email: "author@test.com"})
+	documents, err := s.repo.GetAllDocuments(models.Email{Email: "author@test.com"})
 	s.Require().NoError(err)
 	s.Require().Len(documents, 1)
 	documentID := documents[0].ID
@@ -151,7 +151,7 @@ func (s *DocumentServiceSuite) TestGetDocumentByID() {
 
 func (s *DocumentServiceSuite) TestUpdateTitle() {
 	// Prepare test data
-	documents, err := s.repo.GetAllDocuments(dto.Email{Email: "author@test.com"})
+	documents, err := s.repo.GetAllDocuments(models.Email{Email: "author@test.com"})
 	s.Require().NoError(err)
 	s.Require().Len(documents, 1)
 	documentID := documents[0].ID
@@ -170,13 +170,13 @@ func (s *DocumentServiceSuite) TestUpdateTitle() {
 
 func (s *DocumentServiceSuite) TestUpdateCollaborators() {
 	// Prepare test data
-	documents, err := s.repo.GetAllDocuments(dto.Email{Email: "author@test.com"})
+	documents, err := s.repo.GetAllDocuments(models.Email{Email: "author@test.com"})
 	s.Require().NoError(err)
 	s.Require().Len(documents, 1)
 	documentID := documents[0].ID
 
 	// Prepare collaborators
-	newCollaborators := dto.Access{
+	newCollaborators := models.Access{
 		ReadAccess:  []string{"new_read@test.com"},
 		WriteAccess: []string{"new_write@test.com"},
 	}
@@ -194,7 +194,7 @@ func (s *DocumentServiceSuite) TestUpdateCollaborators() {
 
 func (s *DocumentServiceSuite) TestDeleteDocument() {
 	// Prepare test data
-	documents, err := s.repo.GetAllDocuments(dto.Email{Email: "author@test.com"})
+	documents, err := s.repo.GetAllDocuments(models.Email{Email: "author@test.com"})
 	s.Require().NoError(err)
 	s.Require().Len(documents, 1)
 	documentID := documents[0].ID

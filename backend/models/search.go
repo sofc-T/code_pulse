@@ -1,4 +1,4 @@
-package dto
+package models
 
 type Search struct {
 	SearchQuery string `json:"searchQuery" binding:"required"`

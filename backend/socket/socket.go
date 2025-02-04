@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/sofc-t/code_pulse/delivery/controller"
-	"github.com/sofc-t/code_pulse/dto"
+	"github.com/sofc-t/code_pulse/models"
 )
 
 var (
@@ -90,7 +90,7 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 			break
 		}
 
-		var message dto.Message
+		var message models.Message
 		if err := json.Unmarshal(msg, &message); err != nil {
 			log.Println("Error unmarshalling document:", err)
 			continue
@@ -136,9 +136,9 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 }
 
 
-func InitializeDocumentCache(ctx *gin.Context, documentController controller.DocumentController) (*dto.Document, error) {
+func InitializeDocumentCache(ctx *gin.Context, documentController controller.DocumentController) (*models.Document, error) {
 	documentID := ctx.Param("id")
-	var document *dto.Document
+	var document *models.Document
 
 	// Check if the document is already in the cache
 	if cachedDocument, ok := documentCache.Load(documentID); !ok {
@@ -154,18 +154,18 @@ func InitializeDocumentCache(ctx *gin.Context, documentController controller.Doc
 		ctx.JSON(http.StatusOK, document)
 	} else {
 		// If document is already in cache, retrieve it
-		document = cachedDocument.(*dto.Document)
+		document = cachedDocument.(*models.Document)
 	}
 	return document, nil
 }
 
-func UpdateDocumentCache(documentID string, newData dto.DocumentData) error {
+func UpdateDocumentCache(documentID string, newData models.DocumentData) error {
 	cachedDocument, ok := documentCache.Load(documentID)
 	if !ok {
 		return fmt.Errorf("document not found in cache")
 	}
 
-	document := cachedDocument.(*dto.Document)
+	document := cachedDocument.(*models.Document)
 	document.Data = newData
 
 	// Update the document in the cache
@@ -193,7 +193,7 @@ func syncDatabaseWithCache(documentController controller.DocumentController) err
 	// Iterate over the cache and update the database with each entry
 	documentCache.Range(func(key, value interface{}) bool {
 		documentID := key.(string)
-		cachedDocument := value.(*dto.Document)
+		cachedDocument := value.(*models.Document)
 
 		// Update the database with the cached document
 		err := documentController.UpdateDocument(documentID, cachedDocument.Data)
@@ -208,14 +208,14 @@ func syncDatabaseWithCache(documentController controller.DocumentController) err
 	return nil
 }
 
-func UpdateDocumentCacheAttribute(documentID string, newData dto.Access) error {
+func UpdateDocumentCacheAttribute(documentID string, newData models.Access) error {
 	fmt.Print("Updating document cache attribute\n")
 	cachedDocument, ok := documentCache.Load(documentID)
 	if !ok {
 		return fmt.Errorf("document not found in cache")
 	}
 
-	document := cachedDocument.(*dto.Document)
+	document := cachedDocument.(*models.Document)
 	document.ReadAccess = newData.ReadAccess
 	document.WriteAccess = newData.WriteAccess
 
@@ -231,7 +231,7 @@ func UpdateDocumentTitleCacheAttribute(documentID string, newTitle string) error
 		return fmt.Errorf("document not found in cache")
 	}
 
-	document := cachedDocument.(*dto.Document)
+	document := cachedDocument.(*models.Document)
 	document.Title = newTitle
 
 	// Update the document in the cache
