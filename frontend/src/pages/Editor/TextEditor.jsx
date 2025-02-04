@@ -95,9 +95,9 @@ export default function TextEditor() {
 
   useEffect(() => {
     if (quill == null || documentId == null) return;
-    const BASE_URL = process.env.REACT_APP_BASE_URL.slice(8);
+    const BASE_URL = process.env.REACT_APP_BASE_URL.slice(7);
     const socketa = new WebSocket(
-      `wss://${BASE_URL}/documents/handler?document_id=${documentId}&token=${token}`
+      `ws://${BASE_URL}/documents/handler?document_id=${documentId}&token=${token}`
     );
     setSocket(socketa);
 
