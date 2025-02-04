@@ -18,7 +18,7 @@ import (
 	"github.com/sofc-t/code_pulse/dto"
 	docservice "github.com/sofc-t/code_pulse/infrastructure/doc"
 	userservice "github.com/sofc-t/code_pulse/infrastructure/user"
-	"github.com/sofc-t/code_pulse/middlewares"
+	
 	"github.com/sofc-t/code_pulse/socket"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -117,7 +117,7 @@ func main() {
 
 	// Route for handling document operations
 	documentRoutes := server.Group(("/documents"))
-	documentRoutes.Use(middlewares.AuthorizeJWT())
+	// documentRoutes.Use(middlewares.AuthorizeJWT())
 	{
 		documentRoutes.GET("/handler", func(ctx *gin.Context) {
 			documentID := ctx.Query("document_id")
@@ -186,7 +186,7 @@ func main() {
 
 		// Route for deleting a document
 		documentRoutes.DELETE("/delete/:id", func(ctx *gin.Context) {
-			// Deleting a document from MongoDB
+			
 			documentController.DeleteDocument(ctx)
 		})
 	}
