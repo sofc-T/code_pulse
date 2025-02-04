@@ -57,7 +57,7 @@ func (s *DocumentServiceSuite) cleanupDatabase() {
 }
 
 func (s *DocumentServiceSuite) prepareTestData() {
-	_, err := s.repo.CreateDocument("author@test.com", "Test Document", "Test body", []string{"read@test.com"}, []string{"write@test.com"})
+	_, err := s.repo.CreateDocument("author@test.com", "Test Document", "Test body", []string{"read@test.com"}, []string{"write@test.com"}, "python")
 	if err != nil {
 		s.T().Fatal(err)
 	}
@@ -97,7 +97,7 @@ func (s *DocumentServiceSuite) TestCreateDocument() {
 	writeAccess := []string{"write@test.com"}
 
 	// Call the method under test
-	documentID, err := s.repo.CreateDocument(author, title, body, readAccess, writeAccess)
+	documentID, err := s.repo.CreateDocument(author, title, body, readAccess, writeAccess, "python")
 
 	// Assertions
 	s.NoError(err)

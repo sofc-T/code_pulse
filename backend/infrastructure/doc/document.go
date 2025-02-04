@@ -14,7 +14,7 @@ import (
 type Documentrepo interface {
 	GetAllDocuments(email models.Email) ([]*models.Document, error)
 	SearchDocuments(email string, searchQuery string) ([]*models.Document, error)
-	CreateDocument(author string, title string, body interface{}, readAccess []string, writeAccess []string) (string, error)
+	CreateDocument(author string, title string, body interface{}, readAccess []string, writeAccess []string, language string) (string, error)
 	UpdateDocument(documentID string, body models.DocumentData) error
 	GetDocumentByID(documentID string) (*models.Document, error)
 	UpdateTitle(documentID string, title string) (string, error)

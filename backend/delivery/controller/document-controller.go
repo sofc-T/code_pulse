@@ -81,7 +81,7 @@ func (controller *documentController) CreateNewDocument(ctx *gin.Context) {
 		document.WriteAccess = []string{document.Author}
 	}
 
-	documentID, err := controller.documentrepo.CreateDocument(document.Author, document.Title, document.Data, document.ReadAccess, document.WriteAccess)
+	documentID, err := controller.documentrepo.CreateDocument(document.Author, document.Title, document.Data, document.ReadAccess, document.WriteAccess, document.ProgrammingLanguage)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create document"})
 		return
