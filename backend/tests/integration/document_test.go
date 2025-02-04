@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/stretchr/testify/suite"
 	core "github.com/sofc-t/code_pulse/delivery/core"
+	"github.com/stretchr/testify/suite"
 )
 
 type DocumentEndpointsSuite struct {
@@ -46,7 +46,7 @@ func (s *DocumentEndpointsSuite) TestGetAllDocuments() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	requestURL := BASE_URL + "/documents/getall"
@@ -118,7 +118,7 @@ func (s *DocumentEndpointsSuite) TestSearchDocuments() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	SEARCH_QUERY := os.Getenv("SEARCH_QUERY")
@@ -202,7 +202,7 @@ func (s *DocumentEndpointsSuite) TestCreateDocument() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	TITLE := os.Getenv("TEST_DOCUMENT_TITLE")
@@ -297,7 +297,7 @@ func (s *DocumentEndpointsSuite) TestGetOneDocument() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 
 		ID := os.Getenv("TEST_DOCUMENT_ID")
 		if ID == "" {
@@ -379,7 +379,7 @@ func (s *DocumentEndpointsSuite) TestUpdateTitle() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	ID := os.Getenv("TEST_DOCUMENT_ID")
@@ -451,7 +451,7 @@ func (s *DocumentEndpointsSuite) TestUpdateCollaborators() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	TITLE := os.Getenv("TEST_DOCUMENT_TITLE")
@@ -585,7 +585,7 @@ func (s *DocumentEndpointsSuite) TestDeleteDocument() {
 	EMAIL := os.Getenv("TEST_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	TITLE := os.Getenv("TEST_DOCUMENT_TITLE")

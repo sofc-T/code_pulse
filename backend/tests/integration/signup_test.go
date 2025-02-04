@@ -38,13 +38,13 @@ func (s *SignupEndpointsSuite) TestSignup() {
 	EMAIL := os.Getenv("TEST_NEW_USER_EMAIL")
 	if EMAIL == "" {
 		fmt.Println("TEST_USER_EMAIL environment variable is not set.")
-		EMAIL = "khalid11abdu@gmail.com"
+		EMAIL = "codepulse@code.com"
 	}
 
 	PASSWORD := os.Getenv("TEST_NEW_USER_PASSWORD")
 	if PASSWORD == "" {
 		fmt.Println("TEST_USER_PASSWORD environment variable is not set.")
-		PASSWORD = "Khalid1!"
+		PASSWORD = "password11!"
 	}
 
 	requestURL := BASE_URL + "/auth/signup"
@@ -98,4 +98,4 @@ func (s *SignupEndpointsSuite) TestSignup() {
 	// Check the presence of the token in the response
 	message := responseData["message"].(string)
 	s.Assert().Equal("User created successfully", message)
-}	
+}
