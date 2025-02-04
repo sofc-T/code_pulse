@@ -175,7 +175,7 @@ func UpdateDocumentCache(documentID string, newData models.DocumentData) error {
 
 func UpdateDatabaseWithCache(documentController controller.DocumentController) {
 	// Create a ticker that ticks every specified duration
-	ticker := time.NewTicker(30 * time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 
 	// Run a goroutine to perform the periodic update
 	go func() {
