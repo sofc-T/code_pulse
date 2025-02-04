@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sofc-t/code_pulse/dto"
+	models "github.com/sofc-t/code_pulse/models"
 	"github.com/sofc-t/code_pulse/infrastructure/user"
 )
 
@@ -21,7 +21,7 @@ func NewSignupController(signupService service.SignupService) SignupController {
 }
 
 func (controller *signupController) Signup(ctx *gin.Context) string {
-	var signUPInfo dto.SignUp
+	var signUPInfo models.SignUp
 
 	err := ctx.ShouldBind(&signUPInfo)
 	if err != nil {

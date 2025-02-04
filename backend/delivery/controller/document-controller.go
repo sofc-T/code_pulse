@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sofc-t/code_pulse/dto"
-	"github.com/sofc-t/code_pulse/infrastructure/doc"
+	service "github.com/sofc-t/code_pulse/infrastructure/doc"
+	models "github.com/sofc-t/code_pulse/models"
 )
 
 type DocumentController interface {
-	GetAllDocuments(ctx *gin.Context) ([]*dto.Document, error)
-	SearchDocuments(ctx *gin.Context) ([]*dto.Document, error)
+	GetAllDocuments(ctx *gin.Context) ([]*models.Document, error)
+	SearchDocuments(ctx *gin.Context) ([]*models.Document, error)
 	CreateNewDocument(ctx *gin.Context)
-	UpdateDocument(documentID string, body dto.DocumentData) error
-	GetOneDocument(ctx *gin.Context) (*dto.Document, error)
+	UpdateDocument(documentID string, body models.DocumentData) error
+	GetOneDocument(ctx *gin.Context) (*models.Document, error)
 	UpdateTitle(ctx *gin.Context) (string, string)
-	UpdateCollaborators(ctx *gin.Context) dto.Document
+	UpdateCollaborators(ctx *gin.Context) models.Document
 	DeleteDocument(ctx *gin.Context)
 }
 
@@ -30,9 +30,9 @@ func NewDocumentController(documentrepo service.Documentrepo) DocumentController
 	}
 }
 
-func (controller *documentController) GetAllDocuments(ctx *gin.Context) ([]*dto.Document, error) {
+func (controller *documentController) GetAllDocuments(ctx *gin.Context) ([]*models.Document, error) {
 	// Implement logic to fetch all documents from the MongoDB collection of a single user
-	var email dto.Email
+	var email models.Email
 	err := ctx.ShouldBind(&email)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -47,8 +47,8 @@ func (controller *documentController) GetAllDocuments(ctx *gin.Context) ([]*dto.
 	return documents, nil
 }
 
-func (contrller *documentController) SearchDocuments(ctx *gin.Context) ([]*dto.Document, error) {
-	var searchQuery dto.Search
+func (contrller *documentController) SearchDocuments(ctx *gin.Context) ([]*models.Document, error) {
+	var searchQuery models.Search
 	// Implement logic to search for documents in the MongoDB collection of a single user
 	err := ctx.ShouldBind(&searchQuery)
 	if err != nil {
@@ -65,7 +65,7 @@ func (contrller *documentController) SearchDocuments(ctx *gin.Context) ([]*dto.D
 }
 
 func (controller *documentController) CreateNewDocument(ctx *gin.Context) {
-	var document dto.Document
+	var document models.Document
 	if err := ctx.ShouldBindJSON(&document); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
@@ -90,7 +90,7 @@ func (controller *documentController) CreateNewDocument(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Document created successfully", "document_id": documentID})
 }
 
-func (controller *documentController) UpdateDocument(documentID string, body dto.DocumentData) error {
+func (controller *documentController) UpdateDocument(documentID string, body models.DocumentData) error {
 	// Implement logic to update a document in the MongoDB collection of a single user
 	err := controller.documentrepo.UpdateDocument(documentID, body)
 	if err != nil {
@@ -99,7 +99,7 @@ func (controller *documentController) UpdateDocument(documentID string, body dto
 	return nil
 }
 
-func (controller *documentController) GetOneDocument(ctx *gin.Context) (*dto.Document, error) {
+func (controller *documentController) GetOneDocument(ctx *gin.Context) (*models.Document, error) {
 	fmt.Println("GetOneDocument is called")
 	documentID := ctx.Param("id")
 	document, err := controller.documentrepo.GetDocumentByID(documentID)
@@ -112,7 +112,7 @@ func (controller *documentController) GetOneDocument(ctx *gin.Context) (*dto.Doc
 }
 
 func (controller *documentController) UpdateTitle(ctx *gin.Context) (string, string) {
-	var document dto.Title
+	var document models.Title
 	if err := ctx.ShouldBindJSON(&document); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return "", ""
@@ -134,24 +134,24 @@ func (controller *documentController) UpdateTitle(ctx *gin.Context) (string, str
 	return document.Title, document.ID
 }
 
-func (controller *documentController) UpdateCollaborators(ctx *gin.Context) dto.Document {
-	var access dto.Access
+func (controller *documentController) UpdateCollaborators(ctx *gin.Context) models.Document {
+	var access models.Access
 	if err := ctx.ShouldBindJSON(&access); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return dto.Document{}
+		return models.Document{}
 	}
 	if len(access.ReadAccess) == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Access is required"})
-		return dto.Document{}
+		return models.Document{}
 	}
 	if len(access.WriteAccess) == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Access is required"})
-		return dto.Document{}
+		return models.Document{}
 	}
 	document, err := controller.documentrepo.UpdateCollaborators(access.ID, access)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update document access"})
-		return dto.Document{}
+		return models.Document{}
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "Document access updated successfully"})
 	return document

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sofc-t/code_pulse/dto"
+	models "github.com/sofc-t/code_pulse/models"
 	"github.com/sofc-t/code_pulse/infrastructure/user"
 	"github.com/sofc-t/code_pulse/delivery/core"
 )
@@ -25,7 +25,7 @@ func NewLoginController(loginService service.LoginService,
 }
 
 func (controller *loginController) Login(ctx *gin.Context) string {
-	var credentials dto.Login
+	var credentials models.Login
 	err := ctx.ShouldBind(&credentials)
 	if err != nil {
 		return ""
