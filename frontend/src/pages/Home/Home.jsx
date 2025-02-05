@@ -35,7 +35,7 @@ const Home = () => {
       },
       body: JSON.stringify({
         author: email,
-        title: "New Code File",
+        title: "New File",
         body: "",
         access: [email],
         programmingLanguage:"PlainText"
