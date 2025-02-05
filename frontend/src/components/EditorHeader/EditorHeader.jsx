@@ -12,7 +12,6 @@ import {
 } from "../../store/UIContext";
 import { useAuthor, useEmail, useToken } from "../../store/AuthContext";
 import { LockedFile } from "../Icons/LockedFile";
-import { Offline } from "../Icons/Offline";
 import { Sync } from "../Icons/Sync";
 
 const EditorHeader = ({ isReadOnly }) => {
@@ -30,7 +29,6 @@ const EditorHeader = ({ isReadOnly }) => {
   const token = useToken();
 
   const [newTitle, setNewTitle] = useState(title);
-  console.log(title,"title")
 
   useEffect(() => {
     // Reset newTitle when the title changes
@@ -139,9 +137,8 @@ const EditorHeader = ({ isReadOnly }) => {
         </div>
         {isOffline === true ? (
           <div className={styles.gap}>
-            <Offline />
             <div onClick={handleRefresh}>
-              <Sync />
+              Reload File
             </div>
           </div>
         ) : null}
@@ -149,12 +146,13 @@ const EditorHeader = ({ isReadOnly }) => {
       <div className={styles.right}>
     {email === author && <button className={styles.button} onClick={toggleModal}>Add Collab</button>}
   
-    <button
+    {email === author && <button
             className={styles.btn}
             onClick={() => deleteDocument(documentId)}
+
           >
             Delete
-          </button>
+          </button>}
   </div>
 
     </header>

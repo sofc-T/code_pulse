@@ -15,7 +15,7 @@
 
 .editor-content {
   position: relative;
-  min-width: 1200px;
+  max-width: 1920px;
   width: 100%;
   margin: 0 auto;
   padding: 20px;
