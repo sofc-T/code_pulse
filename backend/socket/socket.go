@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/streadway/amqp" 
 	"github.com/sofc-t/code_pulse/delivery/controller"
 	"github.com/sofc-t/code_pulse/models"
 )
@@ -21,19 +22,163 @@ var (
 		WriteBufferSize: 1024,
 	}
 	documentWebSockets = make(map[string]*DocumentWebSocket)
-	documentCache sync.Map
+	documentCache      sync.Map
+	rabbitConn         *amqp.Connection
+	rabbitChannel      *amqp.Channel
+	exchangeName       = "document_updates"
 )
+
 type DocumentWebSocket struct {
 	Connections map[*websocket.Conn]bool
 	Mutex       sync.Mutex
 }
 
+func InitRabbitMQ() error {
+	var err error
+	rabbitConn, err = amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if err != nil {
+		return fmt.Errorf("failed to connect to RabbitMQ: %w", err)
+	}
+
+	rabbitChannel, err = rabbitConn.Channel()
+	if err != nil {
+		return fmt.Errorf("failed to open a channel: %w", err)
+	}
+
+	err = rabbitChannel.ExchangeDeclare(
+		exchangeName, // name
+		"fanout",     // type
+		true,         // durable
+		false,        // auto-deleted
+		false,        // internal
+		false,        // no-wait
+		nil,          // arguments
+	)
+	if err != nil {
+		return fmt.Errorf("failed to declare an exchange: %w", err)
+	}
+
+	fmt.Println("RabbitMQ initialized successfully")
+	return nil
+}
+
+
+func PublishMessage(documentID string, message models.Message) error {
+	data, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("failed to marshal message: %w", err)
+	}
+
+	err = rabbitChannel.Publish(
+		exchangeName, // exchange
+		"",           // routing key (ignored in fanout)
+		false,        // mandatory
+		false,        // immediate
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        data,
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to publish message: %w", err)
+	}
+
+	fmt.Println("Message published to RabbitMQ")
+	return nil
+}
+
+
+func StartRabbitMQConsumer() {
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if err != nil {
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	}
+	channel, err := conn.Channel()
+	if err != nil {
+		log.Fatalf("Failed to open a channel: %v", err)
+	}
+
+	queue, err := channel.QueueDeclare(
+		"",    // auto-generated queue name
+		false, // durable
+		false, // delete when unused
+		true,  // exclusive
+		false, // no-wait
+		nil,   // arguments
+	)
+	if err != nil {
+		log.Fatalf("Failed to declare a queue: %v", err)
+	}
+
+	err = channel.QueueBind(
+		queue.Name,
+		"",           // routing key
+		exchangeName, // exchange
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("Failed to bind queue: %v", err)
+	}
+
+	msgs, err := channel.Consume(
+		queue.Name, // queue
+		"",         // consumer
+		true,       // auto-ack
+		false,      // exclusive
+		false,      // no-local
+		false,      // no-wait
+		nil,        // args
+	)
+	if err != nil {
+		log.Fatalf("Failed to register a consumer: %v", err)
+	}
+
+	go func() {
+		for msg := range msgs {
+			var message models.Message
+			if err := json.Unmarshal(msg.Body, &message); err != nil {
+				log.Println("Failed to unmarshal message:", err)
+				continue
+			}
+			BroadcastMessage(message)
+		}
+	}()
+
+	fmt.Println("RabbitMQ consumer started")
+}
+
+func BroadcastMessage(message models.Message) {
+	documentWebSocket, ok := documentWebSockets[message.ID]
+	if !ok {
+		return
+	}
+
+	documentWebSocket.Mutex.Lock()
+	defer documentWebSocket.Mutex.Unlock()
+
+	data, err := json.Marshal(message.Change)
+	if err != nil {
+		log.Println("Error marshalling message:", err)
+		return
+	}
+
+	for conn := range documentWebSocket.Connections {
+		err := conn.WriteMessage(websocket.TextMessage, data)
+		if err != nil {
+			log.Println("Error writing message:", err)
+			conn.Close()
+			delete(documentWebSocket.Connections, conn)
+		}
+	}
+}
+
+// Handle incoming WebSocket connections
 func HandleWebSocket(ctx *gin.Context, documentID string) {
 	fmt.Println("Handling WebSocket connection for document:", documentID)
 	fmt.Println("Connection handled by server running on port:", os.Getenv("PORT"))
 
 	upgrader.CheckOrigin = func(r *http.Request) bool {
-		// Allow any origin (not recommended for production, consider a more restrictive check)
 		return true
 	}
 
@@ -44,29 +189,21 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 	}
 	defer conn.Close()
 
-	// Get or create a WebSocket instance for the documentID
 	documentWebSocket, ok := documentWebSockets[documentID]
 	if !ok {
 		documentWebSocket = &DocumentWebSocket{Connections: make(map[*websocket.Conn]bool)}
 		documentWebSockets[documentID] = documentWebSocket
 	}
-	fmt.Println("Number of active connections:", len(documentWebSockets[documentID].Connections)+1)
 
-	// Add the new connection to the WebSocket instance
 	documentWebSocket.Mutex.Lock()
 	documentWebSocket.Connections[conn] = true
 	documentWebSocket.Mutex.Unlock()
 
-	// Create a channel to signal when a client disconnects
 	disconnectChannel := make(chan *websocket.Conn, 1)
-
-	// Save the source connection
 	sourceConnection := conn
 
-	// Start a goroutine to handle disconnection cleanup
 	go func() {
 		<-disconnectChannel
-		// Remove the connection from the WebSocket instance when the client disconnects
 		documentWebSocket.Mutex.Lock()
 		delete(documentWebSocket.Connections, sourceConnection)
 		if len(documentWebSocket.Connections) == 0 {
@@ -77,16 +214,10 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 		documentWebSocket.Mutex.Unlock()
 	}()
 
-	// Save the source connection
-	// sourceConnection := conn
-
 	for {
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Println("Error reading message:", err)
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("Error reading message: %v", err)
-			}
 			break
 		}
 
@@ -96,44 +227,21 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 			continue
 		}
 
-		// Update the document cache
 		if err := UpdateDocumentCache(documentID, message.Data); err != nil {
 			log.Println("Error updating document cache:", err)
 			continue
 		}
 
-		// Update the document in the database
-		// if err := documentController.UpdateDocument(documentID, message.Data); err != nil {
-		// 	log.Println("Error updating document in DB:", err)
-		// 	continue
-		// }
-
-		// Broadcast the message to all connected clients for the document
-		documentWebSocket.Mutex.Lock()
-		for conn := range documentWebSocket.Connections {
-			// Skip broadcasting to the source connection
-			if conn == sourceConnection {
-				continue
-			}
-
-			data, err := json.Marshal(message.Change)
-			if err != nil {
-				log.Println("Error marshalling message:", err)
-				continue
-			}
-
-			err = conn.WriteMessage(websocket.TextMessage, data)
-			if err != nil {
-				log.Println("Error writing message:", err)
-				conn.Close()
-				disconnectChannel <- conn // Signal disconnection to the cleanup goroutine
-				delete(documentWebSocket.Connections, conn)
-			}
+		
+		err = PublishMessage(documentID, message)
+		if err != nil {
+			log.Println("Error publishing to RabbitMQ:", err)
 		}
-		documentWebSocket.Mutex.Unlock()
 	}
+
 	close(disconnectChannel)
 }
+
 
 
 func InitializeDocumentCache(ctx *gin.Context, documentController controller.DocumentController) (*models.Document, error) {

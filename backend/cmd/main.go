@@ -163,33 +163,6 @@ func main() {
 				fmt.Println("Error getting document:", err)
 				return
 			}
-			ctx.JSON(http.StatusOK, document)
-		})
-
-		documentRoutes.POST("/updatetitle", func(ctx *gin.Context) {
-			// Updating the title of a document
-			title, documentID := documentController.UpdateTitle(ctx)
-			socket.UpdateDocumentTitleCacheAttribute(documentID, title)
-		})
-
-		documentRoutes.POST("/updatecollaborators", func(ctx *gin.Context) {
-			// Adding a collaborator to a document
-			// updating the database
-			document := documentController.UpdateCollaborators(ctx)
-			// updating the cache
-			access := new(models.Access)
-			access.ID = document.ID
-			access.ReadAccess = document.ReadAccess
-			access.WriteAccess = document.WriteAccess
-			socket.UpdateDocumentCacheAttribute(document.ID, *access)
-		})
-
-		// Route for deleting a document
-		documentRoutes.DELETE("/delete/:id", func(ctx *gin.Context) {
-			
-			documentController.DeleteDocument(ctx)
-		})
-	}
 
 	// Start the periodic cache update
 	socket.UpdateDatabaseWithCache(documentController)
@@ -198,7 +171,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	server.Run("0.0.0.0:" + port)
+	server.Run("localhost:" + port)
 }
 
 

@@ -15,6 +15,7 @@ type Document struct {
 }
 
 type Message struct {
+	ID     string       `json:"id" bson:"_id"`
 	Data   DocumentData `json:"data" bson:"data"`
 	Change map[string]interface{}
 }
