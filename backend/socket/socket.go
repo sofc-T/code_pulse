@@ -232,6 +232,28 @@ func HandleWebSocket(ctx *gin.Context, documentID string) {
 			continue
 		}
 
+		documentWebSocket.Mutex.Lock()
+		for conn := range documentWebSocket.Connections {
+			// Skip broadcasting to the source connection
+			if conn == sourceConnection {
+				continue
+			}
+
+			data, err := json.Marshal(message.Change)
+			if err != nil {
+				log.Println("Error marshalling message:", err)
+				continue
+			}
+
+			err = conn.WriteMessage(websocket.TextMessage, data)
+			if err != nil {
+				log.Println("Error writing message:", err)
+				conn.Close()
+				disconnectChannel <- conn // Signal disconnection to the cleanup goroutine
+				delete(documentWebSocket.Connections, conn)
+			}
+		}
+		documentWebSocket.Mutex.Unlock()
 		
 		err = PublishMessage(documentID, message)
 		if err != nil {

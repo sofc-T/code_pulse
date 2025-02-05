@@ -2,23 +2,22 @@ package main
 
 import (
 	"context"
-	
+	"log"
+
 	"fmt"
-	
+
 	"net/http"
 	"os"
-	
-	
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/sofc-t/code_pulse/delivery/controller"
 	core "github.com/sofc-t/code_pulse/delivery/core"
-	"github.com/sofc-t/code_pulse/models"
 	docservice "github.com/sofc-t/code_pulse/infrastructure/doc"
 	userservice "github.com/sofc-t/code_pulse/infrastructure/user"
-	
+	"github.com/sofc-t/code_pulse/models"
+
 	"github.com/sofc-t/code_pulse/socket"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -189,6 +188,12 @@ func main() {
 			
 			documentController.DeleteDocument(ctx)
 		})
+	}
+
+
+	// Initialize RabbitMQ
+	if err := socket.InitRabbitMQ(); err != nil {
+		log.Fatalf("Failed to initialize RabbitMQ: %v", err)
 	}
 
 	// Start the periodic cache update
