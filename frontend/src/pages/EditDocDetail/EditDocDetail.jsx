@@ -1,7 +1,5 @@
-// DocDetailPage.js
-
 import React, { useCallback, useEffect, useState } from "react";
-import styles from "./EditDocDetail.module.css"; // Import the CSS file for styling
+import styles from "./EditDocDetail.module.css"; 
 import ListItem from "../../components/ListItem/ListItem";
 import { useEmail, useToken } from "../../store/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,11 +19,6 @@ const EditDocDetail = () => {
 
   const [newReader, setNewReader] = useState("");
   const [newWriter, setNewWriter] = useState("");
-
-  // const readAccess = localStorage.getItem("readAccess").split(",");
-  // const writeAccess = localStorage.getItem("writeAccess").split(",");
-  // const [read, setRead] = useState(readAccess);
-  // const [write, setWrite] = useState(writeAccess);
   const read = useReadAccess();
   const write = useWriteAccess();
   const setRead = useUpdateReadAccess();
@@ -104,29 +97,6 @@ const EditDocDetail = () => {
     updateCollaborators();
   };
 
-  const deleteDocument = () => {
-    const BASE_URL = process.env.REACT_APP_BASE_URL;
-    fetch(`${BASE_URL}/documents/delete/${documentId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        if (res.ok) {
-          closeModal();
-          navigate("/home");
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting document:", error);
-      });
-  };
-
   return (
     <div className={styles.container}>
       <h2>Users with read access</h2>
@@ -179,12 +149,6 @@ const EditDocDetail = () => {
           )
         )}
       </div>
-      <button
-        className={styles["delete-btn"]}
-        onClick={() => deleteDocument(documentId)}
-      >
-        Delete document
-      </button>
     </div>
   );
 };

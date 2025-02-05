@@ -9,11 +9,11 @@ const SignUpForm = () => {
   const Notify = (message, type) => {
     if (type === "success") {
       return toast.success(message, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.BOTTOM_CENTER,
       });
     } else {
       return toast.error(message, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.BOTTOM_CENTER,
       });
     }
   };
@@ -26,20 +26,7 @@ const SignUpForm = () => {
   function validatePassword(password) {
     const failedPolicies = [];
     if (password.length < 8) {
-      failedPolicies.push("Password must be at least 8 characters long");
-    }
-    if (!/[a-z]/.test(password)) {
-      failedPolicies.push(
-        "Password must contain at least one lowercase letter"
-      );
-    }
-    if (!/[A-Z]/.test(password)) {
-      failedPolicies.push(
-        "Password must contain at least one uppercase letter"
-      );
-    }
-    if (!/\d/.test(password)) {
-      failedPolicies.push("Password must contain at least one digit");
+      failedPolicies.push("Password must be at least 6 characters long");
     }
     return failedPolicies;
   }
@@ -47,17 +34,18 @@ const SignUpForm = () => {
   const [enteredName, setEnteredName] = useState("");
   const [nameInputTouched, setNameInputTouched] = useState(false);
   const nameInputIsInvalid =
-    enteredName.trim().split(" ").length < 3 && nameInputTouched;
+    enteredName.trim().length < 3 && nameInputTouched;
+    const [enteredPassword, setEnteredPassword] = useState("");
+    const [passwordInputTouched, setPasswordInputTouched] = useState(false);
+  const passwordInputIsInvalid = enteredPassword.trim.length < 3 && passwordInputTouched;
 
   const [enteredEmail, setEnteredEmail] = useState("");
   const [emailInputTouched, setEmailInputTouched] = useState(false);
   const emailIsValid = validateEmail(enteredEmail);
   const emailInputIsInvalid = !emailIsValid && emailInputTouched;
 
-  const [enteredPassword, setEnteredPassword] = useState("");
-  const [passwordInputTouched, setPasswordInputTouched] = useState(false);
   const passwordIsValid = validatePassword(enteredPassword).length === 0;
-  const passwordInputIsInvalid = !passwordIsValid && passwordInputTouched;
+  // const passwordInputIsInvalid = !passwordIsValid && passwordInputTouched;
 
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
   const [confirmPasswordInputTouched, setConfirmPasswordInputTouched] =
@@ -70,7 +58,7 @@ const SignUpForm = () => {
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
-    setNameInputTouched(true);
+    setNameInputTouched(false);
   };
   const nameInputBlurHandler = (event) => {
     setNameInputTouched(true);
@@ -191,7 +179,7 @@ const SignUpForm = () => {
             />
             {nameInputIsInvalid && (
               <p id="nameError" className={styles["error-text"]}>
-                Please enter you full name
+                Name cannot be less than 3 characters
               </p>
             )}
           </div>
@@ -230,9 +218,9 @@ const SignUpForm = () => {
               aria-describedby={passwordInputIsInvalid ? "passwordError" : null}
             />
             {passwordInputIsInvalid && (
-              <div id="passwordError" className={styles["error-text"]}>
-                {passwordInfo}
-              </div>
+              <p id="passwordError" className={styles["error-text"]}>
+                Password must be at least 6 characters long
+              </p>
             )}
           </div>
           <div className={styles.inputContainer}>

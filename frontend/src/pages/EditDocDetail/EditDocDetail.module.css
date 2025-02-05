@@ -38,8 +38,8 @@
 }
 
 .add-permissions button {
-  background-color: #e7e9e9; /* Set your desired button background color */
-  color:black;
+  background-color: #4a4a4a76; /* Set your desired button background color */
+  color:rgb(249, 249, 249);
   border: none;
   border-radius: 5px;
   padding: 12px 20px;
@@ -47,9 +47,9 @@
   font-size: 16px;
 }
 
-.add-permissions button:hover {
+/* .add-permissions button:hover {
   background-color: #e3e7e9; /* Set your desired hover background color */
-}
+/* } */
 
 h2 {
   font-size: 20px;

@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #f4f4f4; /* Light gray background color */
+  background-color: red; 
   font-family: 'Arial', sans-serif;
   color: #333333; /* Dark text color */
 }
@@ -46,19 +46,16 @@ form {
   display: block;
   margin-top: 30px;
   padding: 15px 24px;
-  background-color: #47acd4;
-  color: #ffffff;
+  background: linear-gradient(135deg, #47acd4, #6a5fbb);
+  color: #000000;
   border: none;
-  border-radius: 30px;
+  border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
   width: 100%;
   transition: background-color 0.3s ease;
 }
 
-.form-submit:hover {
-  background-color: #5fbde2;
-}
 
 .googleOath {
   display: flex;
@@ -114,5 +111,5 @@ form {
   display: none;
 }
 h1{
-  color:  #47acd4;
+  color:  black;
 }

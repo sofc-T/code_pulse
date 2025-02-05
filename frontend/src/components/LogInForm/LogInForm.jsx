@@ -3,17 +3,17 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import  { useUpdateEmail, useUpdateToken } from "../../store/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LogInForm = () => {
   const Notify = (message, type) => {
     if (type === "success") {
       return toast.success(message, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.BOTTOM_CENTER,
       });
     } else {
       return toast.error(message, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.BOTTOM_CENTER,
       });
     }
   };
@@ -24,22 +24,6 @@ const LogInForm = () => {
   
   function validatePassword(password) {
     const failedPolicies = [];
-    if (password.length < 8) {
-      failedPolicies.push("Password must be at least 8 characters long");
-    }
-    if (!/[a-z]/.test(password)) {
-      failedPolicies.push(
-        "Password must contain at least one lowercase letter"
-      );
-    }
-    if (!/[A-Z]/.test(password)) {
-      failedPolicies.push(
-        "Password must contain at least one uppercase letter"
-      );
-    }
-    if (!/\d/.test(password)) {
-      failedPolicies.push("Password must contain at least one digit");
-    }
     return failedPolicies;
   }
   const navigate = useNavigate();
@@ -101,7 +85,8 @@ const LogInForm = () => {
         if (response.ok) {
           const data = await response.json();
           if (data.token) {
-            localStorage.setItem("authToken",data.token)
+            localStorage.setItem("authToken",data.token);
+            localStorage.setItem("email",enteredEmail);
             setToken(localStorage.getItem("authToken"));
             updateEmail(enteredEmail);
           }
@@ -133,10 +118,10 @@ const LogInForm = () => {
 
   return (
     <div>
-      <div className={styles.signUpForm}>
+      <div className={styles.login}>
         <div className={styles["form-container"]}>
           <h1>Login</h1>
-\          <form onSubmit={formSubmissionHandler}>
+          <form onSubmit={formSubmissionHandler}>
             <div className={styles.inputContainer}>
               <label htmlFor="email" className={styles.hidden}>
                 Email
@@ -187,6 +172,11 @@ const LogInForm = () => {
               Login
             </button>
           </form>
+          <div className={styles.login}>
+          <p>Don't have an account? <Link to="/signup">
+            <u>Signup</u>
+          </Link> </p>
+        </div>
         </div>
       </div>
       <ToastContainer />

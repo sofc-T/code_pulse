@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./Header.module.css";
 import { useEmail, useToken } from "../../store/AuthContext";
-import {useShowSearchResults, useToggleSearchResults, useUpdateSearchResults } from "../../store/UIContext";
+import { useShowSearchResults, useToggleSearchResults, useUpdateSearchResults } from "../../store/UIContext";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -20,11 +20,11 @@ const Header = () => {
   };
 
   const goToHome = () => {
-    navigate("/home")
-  }
+    navigate("/home");
+  };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
@@ -34,17 +34,14 @@ const Header = () => {
 
     const searchDocuments = async () => {
       try {
-        const response = await fetch(
-          `${BASE_URL}/documents/search`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            },
-            body: JSON.stringify({ SearchQuery: searchQuery, email: email }),
-          }
-        );
+        const response = await fetch(`${BASE_URL}/documents/search`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ SearchQuery: searchQuery, email: email }),
+        });
         if (response.ok) {
           const searchResults = await response.json();
           setSearchResults(searchResults.documents);
@@ -60,9 +57,12 @@ const Header = () => {
       toggleSearchResults();
     }
   };
+
   return (
     <div className={styles["header-container"]}>
-      <h1 className={styles["company-name"]} onClick={goToHome}>MyDoc</h1>
+      <h1 className={styles["company-name"]} onClick={goToHome}>
+        Code_pulse
+      </h1>
 
       <div className={styles["search-container"]}>
         <input
@@ -80,8 +80,8 @@ const Header = () => {
       </div>
 
       <div className={styles["logout-container"]}>
-        <button className={styles["logout-btn"]} onClick={logoutHandler}>
-        Logout
+        <button className={styles["logout-icon"]} onClick={logoutHandler}>
+          <i className="bx bx-log-out bx-lg"></i>
         </button>
       </div>
     </div>

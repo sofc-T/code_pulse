@@ -30,6 +30,7 @@ const EditorHeader = ({ isReadOnly }) => {
   const token = useToken();
 
   const [newTitle, setNewTitle] = useState(title);
+  console.log(title,"title")
 
   useEffect(() => {
     // Reset newTitle when the title changes
@@ -38,6 +39,28 @@ const EditorHeader = ({ isReadOnly }) => {
 
   const goToHome = () => {
     navigate("/home");
+  };
+
+  const deleteDocument = () => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    fetch(`${BASE_URL}/documents/delete/${documentId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        if (res.ok) {
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting document:", error);
+      });
   };
 
   const handleUpdateTitle = () => {
@@ -82,7 +105,7 @@ const EditorHeader = ({ isReadOnly }) => {
     <header className={styles.header}>
       <div className={styles.left}>
         <h1 className={styles["company-name"]} onClick={goToHome}>
-          MyDoc
+        Code_pulse
         </h1>
         <div className={styles.con}>
           {titleIsActive && (
@@ -124,8 +147,16 @@ const EditorHeader = ({ isReadOnly }) => {
         ) : null}
       </div>
       <div className={styles.right}>
-        {email === author && <EditDoc onClick={toggleModal} />}
-      </div>
+    {email === author && <button className={styles.button} onClick={toggleModal}>Add Collab</button>}
+  
+    <button
+            className={styles.btn}
+            onClick={() => deleteDocument(documentId)}
+          >
+            Delete
+          </button>
+  </div>
+
     </header>
   );
 };

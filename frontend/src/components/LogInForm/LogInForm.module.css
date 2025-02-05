@@ -44,14 +44,15 @@ form {
   display: block;
   margin-top: 30px;
   padding: 15px 24px;
-  background-color: #47acd4;
-  color: #ffffff;
+  background: linear-gradient(135deg, #47acd4, #6a5fbb);
+  color: #000000;
   border: none;
-  border-radius: 30px;
+  border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
   width: 100%;
   transition: background-color 0.3s ease;
+ 
 }
 
 .form-submit:hover {
@@ -91,3 +92,4 @@ form {
 .hidden {
   display: none;
 }
+

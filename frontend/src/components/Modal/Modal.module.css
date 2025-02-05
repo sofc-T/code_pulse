@@ -1,11 +1,11 @@
 .modal {
-  width: 65%;
-  height: 75%;
+  width: 40%;
+  height: 60%;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background: linear-gradient(135deg, #47acd4, #6a5fbb);
   border-radius: 5px;
   padding: 20px;
   z-index: 1000;

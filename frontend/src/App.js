@@ -13,7 +13,7 @@ import { UIContextProvider } from "./store/UIContext";
 
 function App() {
   const router = createBrowserRouter([
-    { path: "/", element: <Navigate to={`/signup`} />, exact: true },
+    { path: "/", element: <Navigate to={`/login`} />, exact: true },
     { path: "/signup", element: <SignUpForm /> },
     { path: "/login", element: <LogInForm /> },
     { path: "/home", element: <Home /> },

@@ -4,17 +4,24 @@
     padding: 10px 20px;
     align-items: center;
     justify-content: space-between;
+    background: linear-gradient(135deg, #47acd4, #6a5fbb);
 }
 
 .icon {
     cursor: pointer;
 }
 
+.deleteIcon{
+    cursor: pointer;
+    width: 40px;
+}
 
 .left {
     display: flex;
+    justify-content: space-between;
     gap: 10px;
     align-items: center;
+    width: 60%;
 
 }
 
@@ -40,8 +47,10 @@
     font-weight: bold;
     font-size: 24px; /* Slightly increased font size */
     text-decoration: none;
-    color:#47acd4;
+    color:#000000;
     cursor: pointer;
+
+
 }
 
 .logo {
@@ -51,6 +60,8 @@
 }
 
 .right {
+    display: flex;
+    gap: 40px;
     cursor: pointer;
 }
 
@@ -67,5 +78,19 @@
 }
 
 .gap * {
+    cursor: pointer;
+}
+.button{
+    background:rgba(242, 242, 242, 0);
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    cursor: pointer;
+}
+.btn{
+    background:rgba(242, 242, 242, 0);
+    border: none;
+    color: red;
+    font-size: 20px;
     cursor: pointer;
 }

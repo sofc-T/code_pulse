@@ -2,16 +2,16 @@ export default function CreateDoc(props) {
   return (
     <div style={{
       textDecoration: 'none',
-      color: '#ffffff',
-      backgroundColor:  '#47acd4',
+      color: '#000000FF',
+      // backgroundColor:  '#47acd4',
       padding: '0px 0px',
-      fontSize: '16px',
+      fontSize: '20px',
       border: 'none',
-      borderRadius: '5px',
+      borderRadius: '5px !important',
       cursor: 'pointer',
       outline: 'none',
     }}>
-<i className="bx bx-plus bx-sm"></i>
+    Add
     </div>
     
   );

@@ -35,7 +35,7 @@ export function useUpdateAuthor() {
 }
 
 export function AuthContextProvider({ children }) {
-  const [email, setEmail] = React.useState(null);
+  const [email, setEmail] = React.useState(localStorage.getItem("email"));
   const [token, setToken] = React.useState(localStorage.getItem("authToken"));
   const [author, setAuthor] = React.useState(null);
 

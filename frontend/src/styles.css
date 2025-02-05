@@ -1,37 +1,122 @@
-*, *::before, *::after {
-    box-sizing: border-box;
-  }
-  
   body {
-    background-color: #F3F3F3;
+    background-color: #2f72d6;
     margin: 0;
   }
   
-  .container .ql-editor {
-    width: 8.5in;
-    min-height: 11in;
-    padding: 1in;
-    margin: 1rem;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
-    background-color: white;
-  }
-  
-  .container .ql-container.ql-snow {
-    border: none;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .container .ql-toolbar.ql-snow {
-    display: flex;
-    justify-content: center;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: #F3F3F3;
-    border: none;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
-  }
+
+  /* Main layout */
+.editor-wrapper {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #ffffff;
+  width: 100%;
+  /* border: 5px solid green; */
+}
+
+.editor-content {
+  position: relative;
+  min-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  /* border: 5px solid white; */
+}
+
+/* Editor container and layout */
+.container {
+  display: flex;
+  background: #1e1e1e;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 1rem;
+  position: relative;
+  height: calc(100vh - 200px);
+  /* border: 5px solid red; */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Quill editor customization */
+.ql-toolbar {
+  background: #252525 !important;
+  border-bottom: 1px solid #333 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.ql-toolbar button {
+  color: #ffffff !important;
+}
+
+.ql-toolbar button:hover {
+  color: #007acc !important;
+}
+
+.ql-toolbar .ql-active {
+  color: #007acc !important;
+}
+
+.ql-container {
+  /* border: none !important; */
+  font-family: 'Fira Code', monospace !important;
+  font-size: 14px !important;
+  height: 100% !important;
+  /* border: 5px solid blue !important; */
+  width: 100%;
+}
+
+.ql-editor {
+  padding: 12px 20px !important;
+  color: #d4d4d4 !important;
+  background: #1e1e1e !important;
+}
+
+/* Code block styling */
+.ql-editor pre.ql-syntax {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: 'Fira Code', monospace !important;
+}
+
+/* Syntax highlighting colors */
+.hljs-keyword { color: #569cd6; }
+.hljs-string { color: #ce9178; }
+.hljs-number { color: #b5cea8; }
+.hljs-comment { color: #6a9955; }
+.hljs-function { color: #dcdcaa; }
+.hljs-class { color: #4ec9b0; }
+.hljs-variable { color: #9cdcfe; }
+.hljs-operator { color: #d4d4d4; }
+.hljs-punctuation { color: #d4d4d4; }
+
+/* Language suggestions */
+.suggestions-box {
+  position: absolute;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #d4d4d4;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background: #333;
+  color: #007acc;
+}
   
   @page {
     margin: 1in;

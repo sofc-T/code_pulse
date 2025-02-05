@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import styles from "./Modal.module.css";
-import { Close } from "../Icons/Close";
+import { FaTimes } from "react-icons/fa";
 
 
 export default function Modal({ isOpen, childern, onClose }) {
@@ -11,7 +11,7 @@ export default function Modal({ isOpen, childern, onClose }) {
       <div className={styles.overlay} onClick={onClose}/>
       <div className={styles.modal}>
         <button onClick={onClose} className={styles["no-style"]}>
-          <Close />
+        <FaTimes style={{ cursor: "pointer", color: "red" ,fontSize :"20px" }} />
         </button>
         {childern}
       </div>

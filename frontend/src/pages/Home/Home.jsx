@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Home.module.css";
 import Header from "../../components/Header/Header";
-import DocumentCard from "../../components/DocCard/DocCard";
+import DocumentCard from "../../components/CodeCard/CodeCard";
 import { useEmail, useToken } from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import CreateDoc from "../../components/Icons/CreateDoc";
@@ -35,9 +35,10 @@ const Home = () => {
       },
       body: JSON.stringify({
         author: email,
-        title: "Untitled",
+        title: "New Code File",
         body: "",
         access: [email],
+        programmingLanguage:"PlainText"
       }),
     })
       .then((res) => {
@@ -88,7 +89,7 @@ const Home = () => {
         {/* Floating button for CreateDoc */}
         {!showSearchResults && (
           <button
-            className={`${styles["noStyle"]} ${styles["floating-button"]}`}
+            className={`${styles["floating-button"]}`}
             onClick={CreateNewDocument}
           >
             <CreateDoc />
@@ -108,9 +109,7 @@ const Home = () => {
                 onClick={() => navigate("/documents/" + doc.id)}
                 key={doc.id}
                 name={doc.title}
-                imageUrl={
-                  "https://cdn-icons-png.flaticon.com/512/281/281760.png"
-                }
+                imageUrl={"/code-icon.png"}
               />
             </button>
           ))}
@@ -142,9 +141,7 @@ const Home = () => {
                     onClick={() => navigate("/documents/" + doc.id)}
                     key={doc.id}
                     name={doc.title}
-                    imageUrl={
-                      "https://cdn-icons-png.flaticon.com/512/281/281760.png"
-                    }
+                    imageUrl={"/code-icon.png"}
                   />
                 </button>
               ))}
